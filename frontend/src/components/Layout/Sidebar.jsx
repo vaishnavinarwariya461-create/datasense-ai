@@ -20,6 +20,7 @@ import {
   Database,
 } from 'lucide-react';
 import { useDataStore } from '../../store/useDataStore';
+import { isProUser } from '../../utils/license';
 
 const NAV_ITEMS = [
   { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard, badge: null, emoji: '🏠' },
@@ -36,6 +37,13 @@ const NAV_ITEMS = [
 
 export default function Sidebar({ isOpen, onClose }) {
   const { currentDataset } = useDataStore();
+  const [isPro, setIsPro] = React.useState(isProUser());
+
+  React.useEffect(() => {
+    const handler = () => setIsPro(isProUser());
+    window.addEventListener('datasense_pro_changed', handler);
+    return () => window.removeEventListener('datasense_pro_changed', handler);
+  }, []);
 
   return (
     <>
@@ -174,29 +182,40 @@ export default function Sidebar({ isOpen, onClose }) {
         {/* Bottom Section: Pro Upgrade Banner & User Profile */}
         <div className="p-3 space-y-2.5 border-t border-white/[0.08] shrink-0">
           {/* Pro Card CTA with holographic effect */}
-          <div className="relative rounded-2xl p-3 holographic border border-purple-500/40 overflow-hidden shadow-[0_0_20px_rgba(139,92,246,0.3)]">
+          <div className={`relative rounded-2xl p-3 holographic border transition-all overflow-hidden ${
+            isPro
+              ? 'border-amber-500/40 shadow-[0_0_20px_rgba(245,158,11,0.25)] bg-amber-500/5'
+              : 'border-purple-500/40 shadow-[0_0_20px_rgba(139,92,246,0.3)]'
+          }`}>
             <div className="flex items-center gap-2 mb-1.5">
-              <span className="p-1 rounded-md bg-purple-500/30 text-purple-200">
+              <span className={`p-1 rounded-md ${isPro ? 'bg-amber-500/30 text-amber-200' : 'bg-purple-500/30 text-purple-200'}`}>
                 <Sparkles className="w-3.5 h-3.5 animate-spin" />
               </span>
-              <span className="text-xs font-bold text-white tracking-wide">Upgrade to Pro</span>
-              <span className="ml-auto text-[9px] font-black px-1.5 py-0.2 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-full">
-                GEN-Z
+              <span className="text-xs font-bold text-white tracking-wide">
+                {isPro ? '👑 VIP PRO ACTIVE' : 'Upgrade to Pro'}
+              </span>
+              <span className={`ml-auto text-[9px] font-black px-1.5 py-0.2 text-white rounded-full ${
+                isPro ? 'bg-gradient-to-r from-amber-500 to-yellow-600' : 'bg-gradient-to-r from-pink-500 to-purple-600'
+              }`}>
+                {isPro ? 'VIP' : 'GEN-Z'}
               </span>
             </div>
             <p className="text-[10px] text-slate-200 mb-2 leading-tight">
-              Unlimited uploads, custom Gemini reasoning & What-If models.
+              {isPro
+                ? 'All 12+ chart engines, unlimited AI reasoning & What-If models are unlocked!'
+                : 'Unlimited uploads, custom Gemini reasoning & What-If models.'}
             </p>
-            <Link
-              to="/reports"
-              className="w-full flex items-center justify-center gap-1 py-1.5 px-3 rounded-lg text-xs font-bold text-white bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-purple-500 hover:to-cyan-400 shadow-glow-sm-purple transition-all"
-            >
-              <span>Unlock All</span>
-              <ChevronRight className="w-3.5 h-3.5" />
-            </Link>
+            {!isPro && (
+              <Link
+                to="/#free-vs-paid"
+                className="w-full flex items-center justify-center gap-1 py-1.5 px-3 rounded-lg text-xs font-bold text-white bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-purple-500 hover:to-cyan-400 shadow-glow-sm-purple transition-all"
+              >
+                <span>Unlock All</span>
+                <ChevronRight className="w-3.5 h-3.5" />
+              </Link>
+            )}
           </div>
 
-          {/* LinkedIn Credit */}
           {/* LinkedIn Credit */}
           <a
             href="https://www.linkedin.com/in/neeraj-narwariya-45a39b349"
@@ -214,17 +233,21 @@ export default function Sidebar({ isOpen, onClose }) {
           <div className="flex items-center justify-between p-2 rounded-xl bg-white/[0.03] border border-white/5">
             <div className="flex items-center gap-2.5">
               <div className="relative">
-                <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-purple-500 via-pink-500 to-cyan-400 flex items-center justify-center text-[10px] font-black text-white shadow-sm">
-                  DS
+                <div className={`w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-black text-white shadow-sm ${
+                  isPro ? 'bg-gradient-to-tr from-amber-400 via-pink-500 to-purple-600' : 'bg-gradient-to-tr from-purple-500 via-pink-500 to-cyan-400'
+                }`}>
+                  {isPro ? '👑' : 'DS'}
                 </div>
-                <div className="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-emerald-400 border border-[#0d0d16]" />
+                <div className={`absolute bottom-0 right-0 w-2 h-2 rounded-full border border-[#0d0d16] ${isPro ? 'bg-amber-400' : 'bg-emerald-400'}`} />
               </div>
               <div className="flex flex-col">
                 <span className="text-xs font-bold text-slate-200">DataSense AI</span>
-                <span className="text-[9px] text-purple-300 font-semibold">Free · No Login</span>
+                <span className={`text-[9px] font-semibold ${isPro ? 'text-amber-300' : 'text-purple-300'}`}>
+                  {isPro ? 'VIP Pro Member' : 'Free Community'}
+                </span>
               </div>
             </div>
-            <ShieldCheck className="w-4 h-4 text-emerald-400" />
+            <ShieldCheck className={`w-4 h-4 ${isPro ? 'text-amber-400' : 'text-emerald-400'}`} />
           </div>
         </div>
       </aside>

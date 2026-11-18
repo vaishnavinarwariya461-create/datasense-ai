@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/Layout/Layout';
 import Home from './pages/Home';
@@ -13,8 +13,17 @@ import WhatIfStudio from './pages/WhatIfStudio';
 import Templates from './pages/Templates';
 import Compare from './pages/Compare';
 import { AdPopup } from './components/Monetization/AdBanner';
+import { checkUrlForProKey } from './utils/license';
 
 export default function App() {
+  useEffect(() => {
+    // Check if user came with a magic pro activation link
+    const res = checkUrlForProKey();
+    if (res && res.success) {
+      alert('🎉 DataSense AI Pro Mode Activated! Welcome to VIP access.');
+    }
+  }, []);
+
   return (
     <BrowserRouter>
       <Routes>
