@@ -1,9 +1,19 @@
 import axios from 'axios';
 
-// Base Axios instance pointing to /api or environment override
+// Determine base URL: Custom env var, or production Render backend, or local proxy
+const getBaseUrl = () => {
+  if (import.meta.env.VITE_API_URL) {
+    return `${import.meta.env.VITE_API_URL}/api`;
+  }
+  if (typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+    return 'https://datasense-ai-wsaw.onrender.com/api';
+  }
+  return '/api';
+};
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/api` : '/api',
-  timeout: 30000,
+  baseURL: getBaseUrl(),
+  timeout: 45000,
   headers: {
     'Content-Type': 'application/json',
   },
