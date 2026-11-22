@@ -1,3 +1,1 @@
-# Google AdSense ads.txt for DataSense AI
-# Replace with your publisher ID once approved:
-# google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0
+google.com, pub-2495879677865180, DIRECT, f08c47fec0942fa0

@@ -12,7 +12,7 @@ import { useEffect, useRef, useState } from 'react';
  * Until approved: shows beautiful placeholder banners.
  */
 
-const PUBLISHER_ID = 'ca-pub-XXXXXXXXXXXXXXXX'; // ← Replace after AdSense approval
+const PUBLISHER_ID = 'ca-pub-2495879677865180'; // Neeraj Narwariya's AdSense ID
 const IS_ADSENSE_LIVE = false; // ← Set to true after AdSense approval
 
 // Placeholder ad designs while waiting for AdSense approval
